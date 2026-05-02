@@ -501,3 +501,69 @@ h1 {
 }
 
 .mt-2 { margin-top: 1rem; }
+
+/* High Contrast Mode Overrides */
+.high-contrast {
+  --bg-color: #000000 !important;
+  --bg-surface: #000000 !important;
+  --bg-surface-hover: #111111 !important;
+  --text-primary: #FFFFFF !important;
+  --text-secondary: #FFFF00 !important;
+  --border-color: #FFFFFF !important;
+  --border-hover: #FFFF00 !important;
+  --primary-color: #FFFF00 !important;
+  --secondary-color: #00FFFF !important;
+  --glass-blur: none !important;
+  --glass-shadow: none !important;
+}
+
+.high-contrast .glass-panel {
+  background: #000 !important;
+  border: 2px solid #FFF !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+.high-contrast .btn-primary {
+  background: #FFFF00 !important;
+  color: #000 !important;
+  border: 2px solid #FFFF00 !important;
+  box-shadow: none !important;
+  font-weight: bold !important;
+}
+
+.high-contrast .btn-glass {
+  background: #000 !important;
+  border: 2px solid #FFF !important;
+  color: #FFF !important;
+}
+
+.high-contrast .btn-glass:hover,
+.high-contrast .btn-primary:hover {
+  background: #FFF !important;
+  color: #000 !important;
+  border-color: #FFF !important;
+}
+
+.high-contrast .message-bubble.user {
+  background: #FFF !important;
+  color: #000 !important;
+  border: 2px solid #FFF !important;
+}
+
+.high-contrast .message-bubble {
+  border: 2px solid #FFF !important;
+  background: #000 !important;
+}
+
+.high-contrast .input-field {
+  background: #000 !important;
+  border: 2px solid #FFF !important;
+  color: #FFF !important;
+}
+
+.high-contrast .input-field:focus {
+  border-color: #FFFF00 !important;
+  box-shadow: 0 0 0 4px rgba(255, 255, 0, 0.5) !important;
+}
