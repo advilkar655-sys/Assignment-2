@@ -3,7 +3,7 @@ import App from './App';
 import { describe, it, expect, vi } from 'vitest';
 
 // Mock fetch for Gemini API
-global.fetch = vi.fn(() =>
+globalThis.fetch = vi.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({

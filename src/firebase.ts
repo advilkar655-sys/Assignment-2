@@ -1,7 +1,7 @@
 // Placeholder Firebase configuration
-import { initializeApp } from 'firebase/app';
-import { getAnalytics } from 'firebase/analytics';
-import { getAuth, signInAnonymously } from 'firebase/auth';
+import { initializeApp, type FirebaseApp } from 'firebase/app';
+import { getAnalytics, type Analytics } from 'firebase/analytics';
+import { getAuth, signInAnonymously, type Auth } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyPlaceholderKeyForFirebaseIntegration",
@@ -14,9 +14,9 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase only if we are in a browser environment
-let app;
-let analytics;
-let auth;
+let app: FirebaseApp | undefined;
+let analytics: Analytics | undefined;
+let auth: Auth | undefined;
 
 try {
   app = initializeApp(firebaseConfig);
