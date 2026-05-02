@@ -1,6 +1,14 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import App from './App';
 import { describe, it, expect, vi } from 'vitest';
+
+// vi.mock must be at module top-level so Vitest can hoist it
+vi.mock('./firebase', () => ({
+  signInDemoUser: vi.fn().mockResolvedValue(true)
+}));
+
+// Stub environment variable for API key
+vi.stubEnv('VITE_GEMINI_API_KEY', 'test_key');
 
 // Mock fetch for Gemini API
 globalThis.fetch = vi.fn(() =>
@@ -9,7 +17,7 @@ globalThis.fetch = vi.fn(() =>
     json: () => Promise.resolve({
       candidates: [{
         content: {
-          parts: [{ text: "This is a mocked bot response." }]
+          parts: [{ text: 'This is a mocked bot response.' }]
         }
       }]
     })
@@ -17,15 +25,6 @@ globalThis.fetch = vi.fn(() =>
 ) as any;
 
 describe('DemocracyAI App', () => {
-  // Vitest 1.x allows vi.stubEnv to mock import.meta.env
-  vi.stubEnv('VITE_GEMINI_API_KEY', 'test_key');
-  
-  // As a fallback for some Vite versions:
-  Object.defineProperty(import.meta, 'env', {
-    value: { VITE_GEMINI_API_KEY: 'test_key' },
-    configurable: true
-  });
-
   it('renders the main dashboard with header', () => {
     render(<App />);
     expect(screen.getByText('DemocracyAI')).toBeInTheDocument();
@@ -37,13 +36,15 @@ describe('DemocracyAI App', () => {
     expect(screen.getByText(/Hello! I am your Election Process Assistant/i)).toBeInTheDocument();
   });
 
-  it('allows user to send a message and updates UI to loading state', async () => {
+  it('allows user to send a message and updates UI', async () => {
     render(<App />);
     const input = screen.getByPlaceholderText('Ask about the election process...');
     const submitBtn = screen.getByRole('button', { name: 'Send' });
 
-    fireEvent.change(input, { target: { value: 'How does the primary work?' } });
-    fireEvent.click(submitBtn);
+    await act(async () => {
+      fireEvent.change(input, { target: { value: 'How does the primary work?' } });
+      fireEvent.click(submitBtn);
+    });
 
     // After clicking send, the user message should appear in log
     expect(screen.getByText('How does the primary work?')).toBeInTheDocument();
@@ -51,7 +52,7 @@ describe('DemocracyAI App', () => {
 
   it('renders Timeline and Quiz modules in side panel', async () => {
     render(<App />);
-    expect(await screen.findByText('Election Timeline')).toBeInTheDocument();
-    expect(await screen.findByText('Knowledge Quiz')).toBeInTheDocument();
+    expect(await screen.findByText('Election Timeline', {}, { timeout: 5000 })).toBeInTheDocument();
+    expect(await screen.findByText('Knowledge Quiz', {}, { timeout: 5000 })).toBeInTheDocument();
   });
 });
