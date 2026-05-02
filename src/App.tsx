@@ -65,7 +65,7 @@ function App() {
         const systemInstruction = "You are DemocracyAI, an interactive and easy-to-follow assistant that educates users about the election process. Provide clear explanations of election timelines, key steps, and relevant information. Keep answers under 150 words and use markdown for readability. Focus on explaining the process factually.";
         
         // Map local messages to Gemini conversation history format, skipping initial welcome message
-        const conversationHistory = prev.slice(1).map(m => ({
+        const conversationHistory = messages.slice(1).map((m: Message) => ({
           role: m.sender === 'bot' ? 'model' : 'user',
           parts: [{ text: m.text }]
         }));
