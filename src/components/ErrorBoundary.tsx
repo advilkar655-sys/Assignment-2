@@ -1,27 +1,28 @@
-import { Component, type ErrorInfo, type ReactNode } from 'react';
+/**
+ * @fileoverview React Error Boundary component for catching and displaying runtime errors.
+ * Wraps the application to prevent a single component failure from crashing the entire UI.
+ */
 
-interface Props {
-  children?: ReactNode;
-  fallback?: ReactNode;
-}
+import { Component, type ErrorInfo } from 'react';
+import type { ErrorBoundaryProps, ErrorBoundaryState } from '../types';
 
-interface State {
-  hasError: boolean;
-  error?: Error;
-}
-
-export class ErrorBoundary extends Component<Props, State> {
-  public state: State = {
-    hasError: false
+/**
+ * Class-based Error Boundary that catches JavaScript errors anywhere in its
+ * child component tree, logs those errors, and displays a fallback UI.
+ */
+export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  public state: ErrorBoundaryState = {
+    hasError: false,
   };
 
-  public static getDerivedStateFromError(error: Error): State {
-    // Update state so the next render will show the fallback UI.
+  /** Updates state so the next render shows the fallback UI. */
+  public static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error };
   }
 
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Uncaught error:', error, errorInfo);
+  /** Logs error details to the console for debugging. */
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+    console.error('[ErrorBoundary] Uncaught error:', error, errorInfo);
   }
 
   public render() {
@@ -30,11 +31,24 @@ export class ErrorBoundary extends Component<Props, State> {
         return this.props.fallback;
       }
       return (
-        <div className="glass-panel" style={{ padding: '2rem', textAlign: 'center', margin: '2rem' }}>
+        <div
+          className="glass-panel"
+          role="alert"
+          aria-live="assertive"
+          style={{ padding: '2rem', textAlign: 'center', margin: '2rem' }}
+        >
           <h2>Something went wrong.</h2>
           <p>We apologize for the inconvenience. Please refresh the page and try again.</p>
           {this.state.error && (
-            <pre style={{ textAlign: 'left', background: 'rgba(0,0,0,0.5)', padding: '1rem', overflowX: 'auto' }}>
+            <pre
+              style={{
+                textAlign: 'left',
+                background: 'rgba(0,0,0,0.5)',
+                padding: '1rem',
+                overflowX: 'auto',
+                borderRadius: '8px',
+              }}
+            >
               {this.state.error.message}
             </pre>
           )}
