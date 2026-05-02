@@ -33,6 +33,12 @@ function App() {
   const [a11yAnnounce, setA11yAnnounce] = useState('');
   
   const inputRef = useRef<HTMLInputElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Scroll only the chat messages container to bottom on new messages
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, [messages, isTyping]);
 
   useEffect(() => {
     // Authenticate user anonymously for analytics/features
@@ -109,8 +115,8 @@ function App() {
       setA11yAnnounce('Error connecting to AI');
     } finally {
       setIsTyping(false);
-      // Auto-focus input after response
-      setTimeout(() => inputRef.current?.focus(), 100);
+      // Focus input without scrolling the page
+      setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 100);
     }
   }, []);
 
@@ -174,6 +180,8 @@ function App() {
                     </div>
                  </div>
                )}
+               {/* Anchor element to scroll into view on new messages */}
+               <div ref={messagesEndRef} />
             </div>
 
             <div className="chat-input-area">
